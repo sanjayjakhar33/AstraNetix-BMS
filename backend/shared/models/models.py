@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, Boolean, Integer, Text, DECIMAL, Date, BigInteger, ForeignKey
+from sqlalchemy import Column, String, DateTime, Boolean, Integer, Text, DECIMAL, Date, BigInteger, ForeignKey, Float
 from sqlalchemy.dialects.postgresql import UUID, INET, JSONB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -225,4 +225,218 @@ class AuditLog(Base):
     new_values = Column(JSONB)
     ip_address = Column(INET)
     user_agent = Column(Text)
+    ai_risk_score = Column(Float)  # AI-based risk assessment
+    created_at = Column(DateTime, default=func.now())
+
+# NOC Dashboard Models
+class NetworkAlert(Base):
+    __tablename__ = "network_alerts"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), nullable=False)
+    tenant_type = Column(String(20), nullable=False)
+    alert_type = Column(String(50), nullable=False)  # bandwidth, latency, device_down, security
+    severity = Column(String(20), nullable=False)  # critical, high, medium, low
+    title = Column(String(255), nullable=False)
+    description = Column(Text)
+    source = Column(String(100))  # device_id, network_segment, etc.
+    status = Column(String(20), default='open')  # open, acknowledged, resolved
+    escalated = Column(Boolean, default=False)
+    auto_resolved = Column(Boolean, default=False)
+    metadata = Column(JSONB, default={})
+    created_at = Column(DateTime, default=func.now())
+    resolved_at = Column(DateTime)
+
+class SLADefinition(Base):
+    __tablename__ = "sla_definitions"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    isp_id = Column(UUID(as_uuid=True), ForeignKey("isps.id", ondelete="CASCADE"))
+    name = Column(String(255), nullable=False)
+    description = Column(Text)
+    uptime_target = Column(DECIMAL(5, 4), default=0.999)  # 99.9%
+    response_time_target = Column(Integer)  # milliseconds
+    resolution_time_target = Column(Integer)  # hours
+    bandwidth_guarantee = Column(Integer)  # Mbps
+    penalties = Column(JSONB, default={})
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=func.now())
+
+# CRM & Marketing Models
+class CustomerSegment(Base):
+    __tablename__ = "customer_segments"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    isp_id = Column(UUID(as_uuid=True), ForeignKey("isps.id", ondelete="CASCADE"))
+    name = Column(String(255), nullable=False)
+    criteria = Column(JSONB, nullable=False)  # usage, location, plan, etc.
+    description = Column(Text)
+    auto_update = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=func.now())
+
+class MarketingCampaign(Base):
+    __tablename__ = "marketing_campaigns"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    isp_id = Column(UUID(as_uuid=True), ForeignKey("isps.id", ondelete="CASCADE"))
+    name = Column(String(255), nullable=False)
+    campaign_type = Column(String(50), nullable=False)  # email, sms, push
+    status = Column(String(20), default='draft')  # draft, scheduled, running, completed
+    target_segments = Column(JSONB, default=[])
+    content = Column(JSONB, nullable=False)
+    scheduled_at = Column(DateTime)
+    metrics = Column(JSONB, default={})
+    created_at = Column(DateTime, default=func.now())
+
+# Training & Certification Models
+class TrainingModule(Base):
+    __tablename__ = "training_modules"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    isp_id = Column(UUID(as_uuid=True), ForeignKey("isps.id", ondelete="CASCADE"))
+    title = Column(String(255), nullable=False)
+    description = Column(Text)
+    content = Column(JSONB, nullable=False)  # lessons, videos, documents
+    difficulty_level = Column(String(20), default='beginner')
+    estimated_duration = Column(Integer)  # minutes
+    prerequisites = Column(JSONB, default=[])
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=func.now())
+
+class UserTrainingProgress(Base):
+    __tablename__ = "user_training_progress"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"))
+    module_id = Column(UUID(as_uuid=True), ForeignKey("training_modules.id", ondelete="CASCADE"))
+    progress_percentage = Column(Integer, default=0)
+    completed = Column(Boolean, default=False)
+    score = Column(Integer)
+    started_at = Column(DateTime, default=func.now())
+    completed_at = Column(DateTime)
+
+# Backup & Disaster Recovery Models
+class BackupSchedule(Base):
+    __tablename__ = "backup_schedules"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), nullable=False)
+    tenant_type = Column(String(20), nullable=False)
+    backup_type = Column(String(50), nullable=False)  # database, configs, logs
+    frequency = Column(String(20), nullable=False)  # daily, weekly, monthly
+    retention_days = Column(Integer, default=30)
+    geo_replication = Column(Boolean, default=True)
+    encryption_enabled = Column(Boolean, default=True)
+    last_backup = Column(DateTime)
+    status = Column(String(20), default='active')
+    settings = Column(JSONB, default={})
+    created_at = Column(DateTime, default=func.now())
+
+class BackupRecord(Base):
+    __tablename__ = "backup_records"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    schedule_id = Column(UUID(as_uuid=True), ForeignKey("backup_schedules.id", ondelete="CASCADE"))
+    backup_path = Column(String(500), nullable=False)
+    file_size = Column(BigInteger)  # bytes
+    status = Column(String(20), nullable=False)  # success, failed, in_progress
+    error_message = Column(Text)
+    checksum = Column(String(255))
+    started_at = Column(DateTime, default=func.now())
+    completed_at = Column(DateTime)
+
+# Log Management & SIEM Models
+class SecurityEvent(Base):
+    __tablename__ = "security_events"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), nullable=False)
+    event_type = Column(String(50), nullable=False)  # intrusion, ddos, bruteforce, etc.
+    severity = Column(String(20), nullable=False)
+    source_ip = Column(INET)
+    target_ip = Column(INET)
+    description = Column(Text)
+    raw_log = Column(Text)
+    threat_score = Column(Integer)  # 1-100
+    auto_blocked = Column(Boolean, default=False)
+    investigated = Column(Boolean, default=False)
+    false_positive = Column(Boolean, default=False)
+    metadata = Column(JSONB, default={})
+    created_at = Column(DateTime, default=func.now())
+
+# Mobile App Configuration
+class MobileAppConfig(Base):
+    __tablename__ = "mobile_app_configs"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    isp_id = Column(UUID(as_uuid=True), ForeignKey("isps.id", ondelete="CASCADE"))
+    app_name = Column(String(255), nullable=False)
+    package_name = Column(String(255), nullable=False)
+    version = Column(String(20), default='1.0.0')
+    branding = Column(JSONB, default={})  # colors, logos, themes
+    features = Column(JSONB, default={})  # enabled features
+    push_config = Column(JSONB, default={})
+    store_config = Column(JSONB, default={})  # app store details
+    is_published = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=func.now())
+
+# Advanced Reporting Models
+class ReportTemplate(Base):
+    __tablename__ = "report_templates"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    isp_id = Column(UUID(as_uuid=True), ForeignKey("isps.id", ondelete="CASCADE"))
+    name = Column(String(255), nullable=False)
+    description = Column(Text)
+    report_type = Column(String(50), nullable=False)  # usage, billing, network, compliance
+    config = Column(JSONB, nullable=False)  # fields, filters, formatting
+    schedule = Column(JSONB)  # auto-generation schedule
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=func.now())
+
+class ReportGeneration(Base):
+    __tablename__ = "report_generations"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    template_id = Column(UUID(as_uuid=True), ForeignKey("report_templates.id", ondelete="CASCADE"))
+    generated_by = Column(UUID(as_uuid=True))
+    file_path = Column(String(500))
+    file_format = Column(String(10))  # pdf, csv, xlsx
+    status = Column(String(20), default='generating')
+    parameters = Column(JSONB, default={})
+    error_message = Column(Text)
+    created_at = Column(DateTime, default=func.now())
+    completed_at = Column(DateTime)
+
+# Green Network & CSR Models
+class SustainabilityMetric(Base):
+    __tablename__ = "sustainability_metrics"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), nullable=False)
+    tenant_type = Column(String(20), nullable=False)
+    metric_type = Column(String(50), nullable=False)  # energy_consumption, carbon_footprint
+    value = Column(Float, nullable=False)
+    unit = Column(String(20), nullable=False)  # kWh, kg_co2, etc.
+    period_start = Column(Date, nullable=False)
+    period_end = Column(Date, nullable=False)
+    device_id = Column(String(100))
+    location = Column(String(255))
+    metadata = Column(JSONB, default={})
+    created_at = Column(DateTime, default=func.now())
+
+# Webhook System
+class WebhookEndpoint(Base):
+    __tablename__ = "webhook_endpoints"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    tenant_id = Column(UUID(as_uuid=True), nullable=False)
+    tenant_type = Column(String(20), nullable=False)
+    url = Column(String(500), nullable=False)
+    events = Column(JSONB, nullable=False)  # list of event types to subscribe to
+    secret_key = Column(String(255))  # for signature verification
+    is_active = Column(Boolean, default=True)
+    retry_count = Column(Integer, default=3)
+    timeout_seconds = Column(Integer, default=30)
+    last_delivery = Column(DateTime)
     created_at = Column(DateTime, default=func.now())
