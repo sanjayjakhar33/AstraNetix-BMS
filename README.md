@@ -258,6 +258,21 @@ End User Management (Self-service portals)
 - `GET /api/reporting/{isp_id}/compliance/{report_type}` - Compliance reports
 - `GET /api/reporting/{isp_id}/bi-endpoints` - BI integration endpoints
 
+### Support & Ticketing
+- `POST /api/support/{tenant_id}/tickets` - Create support tickets with SLA tracking
+- `GET /api/support/{tenant_id}/tickets` - List support tickets with filtering
+- `POST /api/support/{tenant_id}/chatbot` - AI chatbot for first-level support
+- `GET /api/support/{tenant_id}/analytics` - Support analytics and KPI dashboard
+- `GET /api/support/{tenant_id}/knowledge-base` - Knowledge base articles
+
+### Advanced Reporting
+- `GET /api/reporting/{isp_id}/templates` - Report templates
+- `POST /api/reporting/{isp_id}/templates` - Create custom report templates
+- `POST /api/reporting/{isp_id}/generate` - Generate reports (PDF, CSV, XLSX)
+- `POST /api/reporting/{isp_id}/custom-report` - Custom report builder
+- `GET /api/reporting/{isp_id}/compliance/{report_type}` - Compliance reports
+- `GET /api/reporting/{isp_id}/bi-endpoints` - BI integration endpoints
+
 ### Green Network & CSR
 - `GET /api/sustainability/{tenant_id}/dashboard` - Sustainability dashboard
 - `POST /api/sustainability/{tenant_id}/metrics` - Create sustainability metrics

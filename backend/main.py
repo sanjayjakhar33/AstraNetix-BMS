@@ -16,6 +16,7 @@ from noc.main import router as noc_router
 from crm.main import router as crm_router
 from reporting.main import router as reporting_router
 from sustainability.main import router as sustainability_router
+from support.main import router as support_router
 
 from shared.config import settings
 from shared.database.connection import init_db
@@ -50,6 +51,7 @@ app.include_router(noc_router, prefix="/api/noc", tags=["NOC Dashboard"])
 app.include_router(crm_router, prefix="/api/crm", tags=["CRM & Marketing"])
 app.include_router(reporting_router, prefix="/api/reporting", tags=["Advanced Reporting"])
 app.include_router(sustainability_router, prefix="/api/sustainability", tags=["Green Network & CSR"])
+app.include_router(support_router, prefix="/api/support", tags=["Support & Ticketing"])
 
 @app.on_event("startup")
 async def startup_event():
