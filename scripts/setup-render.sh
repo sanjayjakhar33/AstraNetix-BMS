@@ -75,6 +75,13 @@ else
 fi
 
 echo "📋 Next Steps:"
+echo "   🆓 For FREE TIER TESTING:"
+echo "   1. 📖 Read: RENDER_FREE_TIER_TESTING.md"
+echo "   2. 🚀 Deploy: Use render-free-tier.yaml blueprint"
+echo "   3. ⏱️  Time: 15 minutes setup, \$0 cost"
+echo "   4. 🎯 Perfect for: Evaluation and testing"
+echo
+echo "   🏢 For PRODUCTION DEPLOYMENT:"
 echo "1. 🔐 Sign up/login to Render: https://render.com"
 echo "2. 🔗 Connect your GitHub repository to Render"
 echo "3. 📚 Follow the RENDER_DEPLOYMENT_GUIDE.md step by step"
@@ -86,14 +93,18 @@ echo "8. ⚙️  Configure environment variables from .env.render"
 echo
 
 echo "📖 Quick Links:"
-echo "   📘 Full Guide: RENDER_DEPLOYMENT_GUIDE.md"
+echo "   🆓 Free Tier Testing: RENDER_FREE_TIER_TESTING.md"
+echo "   📘 Full Production Guide: RENDER_DEPLOYMENT_GUIDE.md"
 echo "   ⚙️  Environment Variables: .env.render" 
-echo "   🔧 Render Config: render.yaml"
+echo "   🔧 Production Config: render.yaml"
+echo "   🧪 Free Tier Config: render-free-tier.yaml"
 echo
 
-echo "🎯 Estimated Deployment Time: 15-30 minutes"
-echo "💰 Estimated Monthly Cost: $25-50 (Starter plan)"
+echo "🎯 Estimated Times:"
+echo "   🆓 Free Tier Testing: 15 minutes, \$0/month"
+echo "   🏢 Production Deployment: 30 minutes, \$25-50/month"
 echo
 
-echo "✨ Setup complete! Follow the deployment guide to continue."
-echo "   Open RENDER_DEPLOYMENT_GUIDE.md for detailed instructions."
+echo "✨ Setup complete! Choose your deployment path:"
+echo "   📖 For testing: Open RENDER_FREE_TIER_TESTING.md"
+echo "   📖 For production: Open RENDER_DEPLOYMENT_GUIDE.md"

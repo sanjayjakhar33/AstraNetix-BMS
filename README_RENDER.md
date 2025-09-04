@@ -2,7 +2,23 @@
 
 Deploy your AstraNetix AI Bandwidth Management System to Render in minutes!
 
-## 🎯 Quick Deploy Button
+## 🆓 Free Tier Testing (Recommended for First-Time Users)
+
+**Want to test AstraNetix BMS for free?** Perfect! Start here:
+
+[![Test on Free Tier](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sanjayjakhar33/AstraNetix-BMS&blueprint=render-free-tier.yaml)
+
+📖 **[Complete Free Tier Testing Guide](RENDER_FREE_TIER_TESTING.md)** - Step-by-step instructions
+
+⚠️ **Free Tier Notes**:
+- Services sleep after 15 minutes (30-60s wake time)
+- Perfect for evaluation and testing
+- 512MB RAM, 0.1 CPU per service
+- Upgrade to paid plans for production use
+
+## 🎯 Full Production Deploy
+
+Ready for production? Use the full configuration:
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sanjayjakhar33/AstraNetix-BMS)
 
@@ -44,11 +60,13 @@ If you prefer step-by-step control:
 
 ## 💰 Pricing
 
-| Plan | Monthly Cost | Features |
-|------|-------------|----------|
-| **Free** | $0 | Limited resources, good for testing |
-| **Starter** | ~$25-50 | Perfect for small ISPs (recommended) |
-| **Professional** | ~$100-200 | High traffic, multiple ISPs |
+| Plan | Monthly Cost | Best For | Performance |
+|------|-------------|----------|-------------|
+| **Free** | $0 | Testing & Evaluation | Services sleep after 15min, 512MB RAM |
+| **Starter** | ~$25-50 | Small ISPs, Always-on | 1GB RAM, no sleeping |
+| **Professional** | ~$100-200 | Production, High traffic | 2GB+ RAM, SLA support |
+
+**💡 Recommendation**: Start with **Free** for testing, upgrade to **Starter** for production.
 
 ## 🆘 Need Help?
 
