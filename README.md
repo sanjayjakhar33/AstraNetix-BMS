@@ -368,30 +368,35 @@ open RENDER_DEPLOYMENT_GUIDE.md
 
 📚 **[Complete Render Guide →](RENDER_DEPLOYMENT_GUIDE.md)**
 
-### Production Deployment on Serverbyt.in
+### 🏢 Production Deployment on Serverbyt.in
 
-1. **Server Setup**
-   - Unlimited SSD storage for multi-tenant data
-   - Unlimited bandwidth for global ISP traffic
-   - SSL certificates for multi-domain security
-   - CDN integration for global performance
+**Deploy to your own Serverbyt.in hosting server:**
 
-2. **Environment Configuration**
-   ```bash
-   # Production environment variables
-   DEBUG=false
-   DATABASE_URL=postgresql://user:pass@prod-db:5432/astranetix_bms
-   REDIS_URL=redis://prod-redis:6379/0
-   DOMAIN=astranetix.com
-   SSL_ENABLED=true
-   CDN_ENABLED=true
-   ```
+```bash
+# Quick deployment script
+./scripts/deploy-serverbyt.sh
 
-3. **CI/CD Pipeline**
-   - Automated testing and deployment
-   - Docker container orchestration
-   - Database migrations and backups
-   - Performance monitoring and alerting
+# Follow the complete guide
+open SERVERBYT_DEPLOYMENT_GUIDE.md
+```
+
+**Features:**
+- ✅ **Custom domain support** (serverbyt.in)
+- ✅ **Full server control** with root access
+- ✅ **Multi-subdomain setup** (api.serverbyt.in, isp.serverbyt.in, etc.)
+- ✅ **SSL certificates** with Let's Encrypt
+- ✅ **Docker containerization** for easy management
+- ✅ **Automated backups** and monitoring
+- ✅ **Cost-effective** dedicated hosting
+
+📚 **[Complete Serverbyt.in Guide →](SERVERBYT_DEPLOYMENT_GUIDE.md)**
+
+**Quick Access URLs:**
+- **Main Portal**: https://serverbyt.in
+- **API Docs**: https://api.serverbyt.in/docs
+- **ISP Portal**: https://isp.serverbyt.in
+- **Branch Portal**: https://branch.serverbyt.in
+- **User Portal**: https://user.serverbyt.in
 
 ## 📝 Demo Data
 

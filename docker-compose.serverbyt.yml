@@ -1,0 +1,133 @@
+# Docker Compose configuration for Serverbyt.in production deployment
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+      - ./backups/postgres:/backups
+    ports:
+      - "127.0.0.1:5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+      - ./backups/redis:/backups
+    ports:
+      - "127.0.0.1:6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/Dockerfile.backend.prod
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - DEBUG=false
+      - LOG_LEVEL=INFO
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - DOMAIN=${DOMAIN}
+      - SSL_ENABLED=${SSL_ENABLED}
+      - CDN_ENABLED=${CDN_ENABLED}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GOOGLE_GEMINI_API_KEY=${GOOGLE_GEMINI_API_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  founder-portal:
+    build:
+      context: ./frontend/founder-portal
+      dockerfile: ../../docker/Dockerfile.frontend.prod
+    ports:
+      - "127.0.0.1:3000:80"
+    environment:
+      - REACT_APP_API_URL=https://api.serverbyt.in/api
+      - REACT_APP_DOMAIN=serverbyt.in
+    restart: unless-stopped
+
+  isp-portal:
+    build:
+      context: ./frontend/isp-portal
+      dockerfile: ../../docker/Dockerfile.frontend.prod
+    ports:
+      - "127.0.0.1:3001:80"
+    environment:
+      - REACT_APP_API_URL=https://api.serverbyt.in/api
+      - REACT_APP_DOMAIN=isp.serverbyt.in
+    restart: unless-stopped
+
+  branch-portal:
+    build:
+      context: ./frontend/branch-portal
+      dockerfile: ../../docker/Dockerfile.frontend.prod
+    ports:
+      - "127.0.0.1:3002:80"
+    environment:
+      - REACT_APP_API_URL=https://api.serverbyt.in/api
+      - REACT_APP_DOMAIN=branch.serverbyt.in
+    restart: unless-stopped
+
+  user-portal:
+    build:
+      context: ./frontend/user-portal
+      dockerfile: ../../docker/Dockerfile.frontend.prod
+    ports:
+      - "127.0.0.1:3003:80"
+    environment:
+      - REACT_APP_API_URL=https://api.serverbyt.in/api
+      - REACT_APP_DOMAIN=user.serverbyt.in
+    restart: unless-stopped
+
+  backup:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./backups:/backups
+      - ./scripts/backup.sh:/backup.sh
+    entrypoint: ["/backup.sh"]
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: astranetix_serverbyt_production
