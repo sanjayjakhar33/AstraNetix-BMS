@@ -38,9 +38,11 @@
    
    **Method 1: One-Click Deploy (Easiest)**
    - Go to [Render](https://render.com/deploy)
-   - Repository URL: `https://github.com/YOUR_USERNAME/AstraNetix-BMS`
+   - Repository URL: `https://github.com/YOUR_USERNAME/AstraNetix-BMS` (Replace YOUR_USERNAME with your GitHub username after forking)
    - Blueprint: `render-free-tier.yaml`
    - Click "Connect & Deploy"
+   
+   **Important Note**: Make sure you have forked the repository to your GitHub account first!
    
    **Method 2: Manual Setup**
    - Sign into Render dashboard

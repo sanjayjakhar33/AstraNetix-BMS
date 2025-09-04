@@ -2,6 +2,41 @@
 
 Common issues and solutions when deploying AstraNetix BMS to Render.
 
+## 🔧 Blueprint Configuration Issues
+
+### Invalid Blueprint Syntax
+
+**Problem**: Deployment fails with blueprint parsing errors
+```
+Error: Invalid service configuration
+Error: Unknown service type 'pserv'
+Error: Unknown service type 'redis'
+```
+
+**Solutions**:
+1. **Use correct service types**:
+   - ✅ Use `type: keyvalue` for Redis (not `type: redis`)
+   - ✅ Define PostgreSQL in `databases:` section (not as `type: pserv`)
+   - ✅ Use `runtime: python` and `runtime: static` (not `env:`)
+
+2. **Ensure proper blueprint structure**:
+   ```yaml
+   services:
+     - type: keyvalue  # For Redis
+       name: my-redis
+     - type: web       # For applications
+       runtime: python # or static
+   
+   databases:         # Separate section for databases
+     - name: my-postgres
+   ```
+
+3. **Add repository references**:
+   ```yaml
+   - type: web
+     repo: https://github.com/YOUR_USERNAME/AstraNetix-BMS.git
+   ```
+
 ## 🚨 Build Failures
 
 ### Backend Build Fails
