@@ -5,6 +5,8 @@ services:
     name: astranetix-redis
     plan: starter
     maxmemoryPolicy: allkeys-lru
+    ipAllowList:
+      - source: 0.0.0.0/0
 
   # Backend API Service
   - type: web
@@ -50,7 +52,6 @@ services:
     name: astranetix-founder-portal
     runtime: static
     plan: starter
-    region: oregon
     repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/founder-portal && npm ci && npm run build"
     staticPublishPath: frontend/founder-portal/build
@@ -71,7 +72,6 @@ services:
     name: astranetix-isp-portal
     runtime: static
     plan: starter
-    region: oregon
     repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/isp-portal && npm ci && npm run build"
     staticPublishPath: frontend/isp-portal/build
@@ -92,7 +92,6 @@ services:
     name: astranetix-branch-portal
     runtime: static
     plan: starter
-    region: oregon
     repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/branch-portal && npm ci && npm run build"
     staticPublishPath: frontend/branch-portal/build
@@ -113,7 +112,6 @@ services:
     name: astranetix-user-portal
     runtime: static
     plan: starter
-    region: oregon
     repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/user-portal && npm ci && npm run build"
     staticPublishPath: frontend/user-portal/build

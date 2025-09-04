@@ -7,6 +7,8 @@ services:
     name: astranetix-redis
     plan: free
     maxmemoryPolicy: allkeys-lru
+    ipAllowList:
+      - source: 0.0.0.0/0
 
   # Backend API Service (Free tier: 512MB RAM, 0.1 CPU)
   - type: web
@@ -59,7 +61,6 @@ services:
     name: astranetix-founder-portal
     runtime: static
     plan: free
-    region: oregon
     repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/founder-portal && npm ci --only=production && npm run build"
     staticPublishPath: frontend/founder-portal/build
@@ -82,7 +83,6 @@ services:
     name: astranetix-isp-portal
     runtime: static
     plan: free
-    region: oregon
     repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/isp-portal && npm ci --only=production && npm run build"
     staticPublishPath: frontend/isp-portal/build
@@ -105,7 +105,6 @@ services:
     name: astranetix-branch-portal
     runtime: static
     plan: free
-    region: oregon
     repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/branch-portal && npm ci --only=production && npm run build"
     staticPublishPath: frontend/branch-portal/build
@@ -128,7 +127,6 @@ services:
     name: astranetix-user-portal
     runtime: static
     plan: free
-    region: oregon
     repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/user-portal && npm ci --only=production && npm run build"
     staticPublishPath: frontend/user-portal/build
