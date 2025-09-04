@@ -59,4 +59,4 @@ flake8==6.1.0
 mypy==1.7.1
 
 # CORS
-python-cors==1.7.0
+fastapi-cors==0.0.6
