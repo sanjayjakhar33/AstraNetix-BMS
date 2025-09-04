@@ -22,7 +22,8 @@
 ### Step 1: Prepare Your GitHub Repository
 
 1. **Fork the repository**: Go to [AstraNetix-BMS](https://github.com/sanjayjakhar33/AstraNetix-BMS) and click "Fork"
-2. **No local setup needed** - We'll deploy directly from GitHub
+2. **Keep this reference handy**: Open [QUICK_TEST_REFERENCE.md](QUICK_TEST_REFERENCE.md) in another tab
+3. **No local setup needed** - We'll deploy directly from GitHub
 
 ### Step 2: Sign Up for Render
 
@@ -33,9 +34,19 @@
 
 ### Step 3: Deploy with One Click
 
-1. **Use the free tier blueprint**: Click the button below
+1. **Use the free tier blueprint**: 
    
-   [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/YOUR_USERNAME/AstraNetix-BMS&blueprint=render-free-tier.yaml)
+   **Method 1: One-Click Deploy (Easiest)**
+   - Go to [Render](https://render.com/deploy)
+   - Repository URL: `https://github.com/YOUR_USERNAME/AstraNetix-BMS`
+   - Blueprint: `render-free-tier.yaml`
+   - Click "Connect & Deploy"
+   
+   **Method 2: Manual Setup**
+   - Sign into Render dashboard
+   - Click "New" → "Blueprint"
+   - Connect your forked repository
+   - Select `render-free-tier.yaml` as the blueprint
 
 2. **Configure the deployment**:
    - Repository: Select your forked `AstraNetix-BMS`
