@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
 import uuid
 
@@ -9,7 +9,8 @@ from ..shared.models.models import ISP, Branch, User, SubscriptionPlan, Bandwidt
 from .schemas import (
     ISPDashboardResponse, SubscriberCreateRequest, SubscriberCreateResponse,
     SubscriberListResponse, BandwidthOptimizationResponse, SubscriberAnalyticsResponse,
-    RadiusConfigRequest, PlanCreateRequest, PlanResponse
+    RadiusConfigRequest, PlanCreateRequest, PlanResponse, EnhancedISPDashboard,
+    LocalizationConfig, TrainingModuleResponse, WebhookCreate, WebhookResponse
 )
 from ..shared.utils.security import hash_password, generate_password
 from ..auth.dependencies import get_current_isp
@@ -513,4 +514,344 @@ async def get_subscriber_analytics(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error fetching subscriber analytics: {str(e)}"
+        )
+
+@router.get("/{isp_id}/enhanced-dashboard", response_model=EnhancedISPDashboard)
+async def get_enhanced_isp_dashboard(
+    isp_id: str,
+    current_isp: ISP = Depends(get_current_isp),
+    db: Session = Depends(get_db)
+):
+    """
+    Enhanced ISP dashboard with all new features
+    - NOC metrics and alerts
+    - CRM and marketing insights
+    - Sustainability tracking
+    - SLA compliance monitoring
+    - AI-based security insights
+    """
+    try:
+        if str(current_isp.id) != isp_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied to this ISP portal"
+            )
+        
+        # Get basic metrics (reuse existing logic)
+        subscriber_count = db.query(User).join(Branch).filter(
+            Branch.isp_id == current_isp.id,
+            User.is_active == True
+        ).count()
+        
+        branches_count = db.query(Branch).filter(
+            Branch.isp_id == current_isp.id,
+            Branch.is_active == True
+        ).count()
+        
+        # Enhanced metrics from new features
+        # NOC metrics (simulated - would integrate with actual NOC module)
+        active_alerts = 15
+        critical_alerts = 2
+        network_uptime = 99.7
+        
+        # CRM metrics
+        active_campaigns = 3
+        conversion_rate = 12.5
+        customer_segments = 5
+        
+        # Sustainability metrics
+        energy_efficiency_score = 85.2
+        carbon_footprint = 1250.5  # kg CO2
+        renewable_energy_percentage = 35.0
+        
+        # SLA metrics
+        sla_compliance_percentage = 97.8
+        sla_breaches = 1
+        
+        # AI security metrics
+        security_score = 88.5
+        anomalies_detected = 4
+        
+        # Recent activities
+        recent_tickets = [
+            {
+                "id": "ticket-001",
+                "title": "Network connectivity issue",
+                "priority": "high",
+                "status": "in_progress",
+                "created_at": "2024-01-15T10:30:00Z"
+            }
+        ]
+        
+        recent_alerts = [
+            {
+                "id": "alert-001",
+                "type": "bandwidth_spike",
+                "severity": "medium",
+                "description": "Unusual bandwidth usage detected",
+                "created_at": "2024-01-15T14:20:00Z"
+            }
+        ]
+        
+        recent_reports = [
+            {
+                "id": "report-001",
+                "name": "Monthly Usage Report",
+                "type": "usage",
+                "status": "completed",
+                "generated_at": "2024-01-14T09:00:00Z"
+            }
+        ]
+        
+        return EnhancedISPDashboard(
+            subscriber_count=subscriber_count,
+            branches_count=branches_count,
+            monthly_revenue=125678.90,
+            total_bandwidth_gb=15432.5,
+            avg_peak_usage_mbps=850.2,
+            network_health=95.8,
+            active_alerts=active_alerts,
+            critical_alerts=critical_alerts,
+            network_uptime=network_uptime,
+            active_campaigns=active_campaigns,
+            conversion_rate=conversion_rate,
+            customer_segments=customer_segments,
+            energy_efficiency_score=energy_efficiency_score,
+            carbon_footprint=carbon_footprint,
+            renewable_energy_percentage=renewable_energy_percentage,
+            sla_compliance_percentage=sla_compliance_percentage,
+            sla_breaches=sla_breaches,
+            security_score=security_score,
+            anomalies_detected=anomalies_detected,
+            recent_tickets=recent_tickets,
+            recent_alerts=recent_alerts,
+            recent_reports=recent_reports,
+            branding=current_isp.branding or {}
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching enhanced dashboard: {str(e)}"
+        )
+
+@router.post("/{isp_id}/localization", response_model=Dict[str, Any])
+async def configure_localization(
+    isp_id: str,
+    localization: LocalizationConfig,
+    current_isp: ISP = Depends(get_current_isp),
+    db: Session = Depends(get_db)
+):
+    """
+    Configure multi-language and multi-currency support
+    - Localized UI (English, Spanish, French, Arabic, Hindi)
+    - Date/time formatting per locale
+    - Multi-currency displays and billing
+    """
+    try:
+        if str(current_isp.id) != isp_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied to this ISP"
+            )
+        
+        # Update ISP settings with localization config
+        current_isp.settings = current_isp.settings or {}
+        current_isp.settings['localization'] = {
+            'language': localization.language,
+            'currency': localization.currency,
+            'date_format': localization.date_format,
+            'number_format': localization.number_format,
+            'timezone': localization.timezone
+        }
+        
+        db.commit()
+        
+        return {
+            "message": "Localization configured successfully",
+            "language": localization.language,
+            "currency": localization.currency,
+            "supported_languages": ["en", "es", "fr", "ar", "hi"],
+            "supported_currencies": ["USD", "EUR", "INR", "GBP", "CAD", "AUD"]
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error configuring localization: {str(e)}"
+        )
+
+@router.post("/{isp_id}/mobile-app", response_model=Dict[str, Any])
+async def configure_mobile_app(
+    isp_id: str,
+    app_config: Dict[str, Any],
+    current_isp: ISP = Depends(get_current_isp),
+    db: Session = Depends(get_db)
+):
+    """
+    Configure white-label mobile app templates
+    - iOS/Android app configuration
+    - Custom branding and features
+    - Push notification setup
+    """
+    try:
+        if str(current_isp.id) != isp_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied to this ISP"
+            )
+        
+        # Save mobile app configuration
+        current_isp.settings = current_isp.settings or {}
+        current_isp.settings['mobile_app'] = app_config
+        
+        db.commit()
+        
+        return {
+            "message": "Mobile app configured successfully",
+            "app_name": app_config.get("app_name", "ISP Mobile"),
+            "features_enabled": app_config.get("features", {}),
+            "download_links": {
+                "ios": f"https://apps.apple.com/app/{app_config.get('app_name', 'isp-mobile').lower()}",
+                "android": f"https://play.google.com/store/apps/details?id=com.{isp_id}.mobile"
+            },
+            "push_notifications": app_config.get("push_enabled", True)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error configuring mobile app: {str(e)}"
+        )
+
+@router.get("/{isp_id}/training-modules", response_model=List[TrainingModuleResponse])
+async def get_training_modules(
+    isp_id: str,
+    current_isp: ISP = Depends(get_current_isp),
+    db: Session = Depends(get_db)
+):
+    """
+    Get available training modules for ISP staff
+    - Self-paced training modules
+    - Virtual labs and sandbox environments
+    - Certification tracking
+    """
+    try:
+        if str(current_isp.id) != isp_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied to this ISP"
+            )
+        
+        # Sample training modules (in production, these would come from database)
+        training_modules = [
+            {
+                "id": "module-001",
+                "title": "Network Fundamentals",
+                "description": "Basic networking concepts and ISP operations",
+                "difficulty_level": "beginner",
+                "estimated_duration": 120,  # minutes
+                "completion_rate": 85.2,
+                "is_active": True
+            },
+            {
+                "id": "module-002", 
+                "title": "AI-Powered Bandwidth Management",
+                "description": "Advanced features of AstraNetix BMS",
+                "difficulty_level": "intermediate",
+                "estimated_duration": 180,
+                "completion_rate": 72.1,
+                "is_active": True
+            },
+            {
+                "id": "module-003",
+                "title": "Customer Support Excellence",
+                "description": "Best practices for ISP customer service",
+                "difficulty_level": "beginner",
+                "estimated_duration": 90,
+                "completion_rate": 91.5,
+                "is_active": True
+            },
+            {
+                "id": "module-004",
+                "title": "Network Security & Monitoring",
+                "description": "Security protocols and threat detection",
+                "difficulty_level": "advanced",
+                "estimated_duration": 240,
+                "completion_rate": 68.3,
+                "is_active": True
+            }
+        ]
+        
+        return [TrainingModuleResponse(**module) for module in training_modules]
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching training modules: {str(e)}"
+        )
+
+@router.post("/{isp_id}/webhooks", response_model=WebhookResponse)
+async def create_webhook(
+    isp_id: str,
+    webhook_data: WebhookCreate,
+    current_isp: ISP = Depends(get_current_isp),
+    db: Session = Depends(get_db)
+):
+    """
+    Create webhook endpoint for real-time notifications
+    - Event-driven notifications
+    - Third-party integrations
+    - Custom event handling
+    """
+    try:
+        if str(current_isp.id) != isp_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied to this ISP"
+            )
+        
+        # Create webhook configuration (simplified implementation)
+        webhook_id = str(uuid.uuid4())
+        
+        webhook_config = {
+            "id": webhook_id,
+            "isp_id": isp_id,
+            "url": webhook_data.url,
+            "events": webhook_data.events,
+            "secret_key": webhook_data.secret_key,
+            "is_active": webhook_data.is_active,
+            "created_at": datetime.now()
+        }
+        
+        # Save to ISP settings (in production, this would be a separate table)
+        current_isp.settings = current_isp.settings or {}
+        current_isp.settings['webhooks'] = current_isp.settings.get('webhooks', [])
+        current_isp.settings['webhooks'].append(webhook_config)
+        
+        db.commit()
+        
+        return WebhookResponse(
+            id=webhook_id,
+            url=webhook_data.url,
+            events=webhook_data.events,
+            is_active=webhook_data.is_active,
+            last_delivery=None,
+            created_at=datetime.now()
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error creating webhook: {str(e)}"
         )

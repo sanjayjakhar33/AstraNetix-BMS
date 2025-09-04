@@ -12,6 +12,11 @@ from user.main import router as user_router
 from payment.main import router as payment_router
 from ai_manager.main import router as ai_router
 from auth.main import router as auth_router
+from noc.main import router as noc_router
+from crm.main import router as crm_router
+from reporting.main import router as reporting_router
+from sustainability.main import router as sustainability_router
+from support.main import router as support_router
 
 from shared.config import settings
 from shared.database.connection import init_db
@@ -19,8 +24,8 @@ from shared.database.connection import init_db
 # Create FastAPI application
 app = FastAPI(
     title="AstraNetix AI Bandwidth Management System",
-    description="Complete AI-powered SaaS platform for ISP bandwidth management",
-    version="1.0.0",
+    description="Complete AI-powered SaaS platform for ISP bandwidth management with advanced features",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -42,6 +47,11 @@ app.include_router(branch_router, prefix="/api/branch", tags=["Branch Management
 app.include_router(user_router, prefix="/api/user", tags=["User Portal"])
 app.include_router(payment_router, prefix="/api/payment", tags=["Payment Engine"])
 app.include_router(ai_router, prefix="/api/ai", tags=["AI Manager"])
+app.include_router(noc_router, prefix="/api/noc", tags=["NOC Dashboard"])
+app.include_router(crm_router, prefix="/api/crm", tags=["CRM & Marketing"])
+app.include_router(reporting_router, prefix="/api/reporting", tags=["Advanced Reporting"])
+app.include_router(sustainability_router, prefix="/api/sustainability", tags=["Green Network & CSR"])
+app.include_router(support_router, prefix="/api/support", tags=["Support & Ticketing"])
 
 @app.on_event("startup")
 async def startup_event():
@@ -57,9 +67,25 @@ async def root():
     """Root endpoint with system information"""
     return {
         "message": "AstraNetix AI Bandwidth Management System",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "status": "operational",
-        "docs": "/docs"
+        "docs": "/docs",
+        "features": [
+            "Multi-Tenant Architecture",
+            "AI-Powered Intelligence", 
+            "NOC Dashboard",
+            "CRM & Marketing Automation",
+            "Advanced Reporting & Exports",
+            "Multi-language Support",
+            "Backup & Disaster Recovery",
+            "Log Management & SIEM",
+            "Training Portal",
+            "Mobile App Templates",
+            "REST API & Webhooks",
+            "SLA Management",
+            "Green Network Analytics",
+            "AI-based Audit System"
+        ]
     }
 
 @app.get("/health")

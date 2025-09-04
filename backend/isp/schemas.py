@@ -52,6 +52,107 @@ class ISPDashboardResponse(BaseModel):
     network_health: float
     recent_tickets: List[TicketSummary]
     branding: Dict[str, Any]
+    # Enhanced with new features
+    noc_alerts: int
+    sustainability_score: float
+    sla_compliance: float
+    active_campaigns: int
+
+class EnhancedISPDashboard(BaseModel):
+    # Core metrics
+    subscriber_count: int
+    branches_count: int
+    monthly_revenue: float
+    total_bandwidth_gb: float
+    avg_peak_usage_mbps: float
+    network_health: float
+    
+    # NOC Dashboard metrics
+    active_alerts: int
+    critical_alerts: int
+    network_uptime: float
+    
+    # CRM & Marketing metrics
+    active_campaigns: int
+    conversion_rate: float
+    customer_segments: int
+    
+    # Sustainability metrics
+    energy_efficiency_score: float
+    carbon_footprint: float
+    renewable_energy_percentage: float
+    
+    # SLA metrics
+    sla_compliance_percentage: float
+    sla_breaches: int
+    
+    # AI Audit insights
+    security_score: float
+    anomalies_detected: int
+    
+    # Recent activities
+    recent_tickets: List[TicketSummary]
+    recent_alerts: List[Dict[str, Any]]
+    recent_reports: List[Dict[str, Any]]
+    
+    branding: Dict[str, Any]
+
+# Multi-language support schemas
+class LocalizationConfig(BaseModel):
+    language: str  # en, es, fr, ar, hi
+    currency: str  # USD, EUR, INR, etc.
+    date_format: str
+    number_format: str
+    timezone: str
+
+class MultiLanguageContent(BaseModel):
+    en: str
+    es: Optional[str] = None
+    fr: Optional[str] = None
+    ar: Optional[str] = None
+    hi: Optional[str] = None
+
+# Mobile app configuration
+class MobileAppFeatures(BaseModel):
+    usage_monitoring: bool
+    bill_payment: bool
+    support_tickets: bool
+    notifications: bool
+    speedtest: bool
+    plan_upgrade: bool
+
+class MobileAppBranding(BaseModel):
+    app_name: str
+    primary_color: str
+    secondary_color: str
+    logo_url: str
+    splash_screen_url: str
+    icon_url: str
+
+# Training module schemas
+class TrainingModuleResponse(BaseModel):
+    id: str
+    title: str
+    description: str
+    difficulty_level: str
+    estimated_duration: int
+    completion_rate: float
+    is_active: bool
+
+# Webhook configuration
+class WebhookCreate(BaseModel):
+    url: str
+    events: List[str]
+    secret_key: Optional[str] = None
+    is_active: bool = True
+
+class WebhookResponse(BaseModel):
+    id: str
+    url: str
+    events: List[str]
+    is_active: bool
+    last_delivery: Optional[datetime]
+    created_at: datetime
 
 class SubscriberCreateResponse(BaseModel):
     user_id: str
