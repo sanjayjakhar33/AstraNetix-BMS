@@ -2,15 +2,8 @@
 # Optimized for testing and evaluation on Render's free tier
 
 services:
-  # PostgreSQL Database (Free tier: 1GB storage)
-  - type: pserv
-    name: astranetix-postgres
-    databaseName: astranetix_bms
-    user: astranetix_user
-    plan: free
-    
   # Redis Cache (Free tier: 25MB memory)
-  - type: redis
+  - type: keyvalue
     name: astranetix-redis
     plan: free
     maxmemoryPolicy: allkeys-lru
@@ -18,9 +11,10 @@ services:
   # Backend API Service (Free tier: 512MB RAM, 0.1 CPU)
   - type: web
     name: astranetix-backend
-    env: python
+    runtime: python
     plan: free
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "pip install -r backend/requirements.txt"
     startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1"
     healthCheckPath: /health
@@ -31,7 +25,7 @@ services:
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: redis
+          type: keyvalue
           name: astranetix-redis
           property: connectionString
       - key: DEBUG
@@ -63,9 +57,10 @@ services:
   # Founder Portal - Static Site (Free tier)
   - type: web
     name: astranetix-founder-portal
-    env: static
+    runtime: static
     plan: free
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/founder-portal && npm ci --only=production && npm run build"
     staticPublishPath: frontend/founder-portal/build
     buildFilter:
@@ -85,9 +80,10 @@ services:
   # ISP Portal - Static Site (Free tier)
   - type: web
     name: astranetix-isp-portal
-    env: static
+    runtime: static
     plan: free
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/isp-portal && npm ci --only=production && npm run build"
     staticPublishPath: frontend/isp-portal/build
     buildFilter:
@@ -107,9 +103,10 @@ services:
   # Branch Portal - Static Site (Free tier)
   - type: web
     name: astranetix-branch-portal
-    env: static
+    runtime: static
     plan: free
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/branch-portal && npm ci --only=production && npm run build"
     staticPublishPath: frontend/branch-portal/build
     buildFilter:
@@ -129,9 +126,10 @@ services:
   # User Portal - Static Site (Free tier)
   - type: web
     name: astranetix-user-portal
-    env: static
+    runtime: static
     plan: free
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/user-portal && npm ci --only=production && npm run build"
     staticPublishPath: frontend/user-portal/build
     buildFilter:
@@ -147,3 +145,10 @@ services:
         value: "AstraNetix User Portal (Demo)"
       - key: GENERATE_SOURCEMAP
         value: "false"
+
+# Database configuration
+databases:
+  - name: astranetix-postgres
+    databaseName: astranetix_bms
+    user: astranetix_user
+    plan: free

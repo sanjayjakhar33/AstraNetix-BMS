@@ -1,14 +1,7 @@
 # Render Configuration for AstraNetix AI BMS
 services:
-  # PostgreSQL Database
-  - type: pserv
-    name: astranetix-postgres
-    databaseName: astranetix_bms
-    user: astranetix_user
-    plan: starter
-    
   # Redis Cache
-  - type: redis
+  - type: keyvalue
     name: astranetix-redis
     plan: starter
     maxmemoryPolicy: allkeys-lru
@@ -16,9 +9,10 @@ services:
   # Backend API Service
   - type: web
     name: astranetix-backend
-    env: python
+    runtime: python
     plan: starter
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "pip install -r backend/requirements.txt"
     startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2"
     healthCheckPath: /health
@@ -29,7 +23,7 @@ services:
           property: connectionString
       - key: REDIS_URL
         fromService:
-          type: redis
+          type: keyvalue
           name: astranetix-redis
           property: connectionString
       - key: DEBUG
@@ -54,9 +48,10 @@ services:
   # Founder Portal - Static Site
   - type: web
     name: astranetix-founder-portal
-    env: static
+    runtime: static
     plan: starter
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/founder-portal && npm ci && npm run build"
     staticPublishPath: frontend/founder-portal/build
     buildFilter:
@@ -74,9 +69,10 @@ services:
   # ISP Portal - Static Site  
   - type: web
     name: astranetix-isp-portal
-    env: static
+    runtime: static
     plan: starter
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/isp-portal && npm ci && npm run build"
     staticPublishPath: frontend/isp-portal/build
     buildFilter:
@@ -94,9 +90,10 @@ services:
   # Branch Portal - Static Site
   - type: web
     name: astranetix-branch-portal
-    env: static
+    runtime: static
     plan: starter
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/branch-portal && npm ci && npm run build"
     staticPublishPath: frontend/branch-portal/build
     buildFilter:
@@ -114,9 +111,10 @@ services:
   # User Portal - Static Site
   - type: web
     name: astranetix-user-portal
-    env: static
+    runtime: static
     plan: starter
     region: oregon
+    repo: https://github.com/sanjayjakhar33/AstraNetix-BMS.git
     buildCommand: "cd frontend/user-portal && npm ci && npm run build"
     staticPublishPath: frontend/user-portal/build
     buildFilter:
@@ -130,3 +128,10 @@ services:
           envVarKey: RENDER_EXTERNAL_URL
       - key: REACT_APP_APP_NAME
         value: "AstraNetix User Portal"
+
+# Database configuration
+databases:
+  - name: astranetix-postgres
+    databaseName: astranetix_bms
+    user: astranetix_user
+    plan: starter
