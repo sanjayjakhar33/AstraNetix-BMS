@@ -22,7 +22,7 @@ services:
     plan: free
     region: oregon
     buildCommand: "pip install -r backend/requirements.txt"
-    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1"
+    startCommand: "PYTHONPATH=/opt/render/project/src uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 1"
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
@@ -66,7 +66,7 @@ services:
     env: static
     plan: free
     region: oregon
-    buildCommand: "cd frontend/founder-portal && npm ci --only=production && npm run build"
+    buildCommand: "cd frontend/founder-portal && NODE_OPTIONS='--max-old-space-size=512' npm ci --only=production && NODE_OPTIONS='--max-old-space-size=512' npm run build"
     staticPublishPath: frontend/founder-portal/build
     buildFilter:
       paths:
@@ -88,7 +88,7 @@ services:
     env: static
     plan: free
     region: oregon
-    buildCommand: "cd frontend/isp-portal && npm ci --only=production && npm run build"
+    buildCommand: "cd frontend/isp-portal && NODE_OPTIONS='--max-old-space-size=512' npm ci --only=production && NODE_OPTIONS='--max-old-space-size=512' npm run build"
     staticPublishPath: frontend/isp-portal/build
     buildFilter:
       paths:
@@ -110,7 +110,7 @@ services:
     env: static
     plan: free
     region: oregon
-    buildCommand: "cd frontend/branch-portal && npm ci --only=production && npm run build"
+    buildCommand: "cd frontend/branch-portal && NODE_OPTIONS='--max-old-space-size=512' npm ci --only=production && NODE_OPTIONS='--max-old-space-size=512' npm run build"
     staticPublishPath: frontend/branch-portal/build
     buildFilter:
       paths:
@@ -132,7 +132,7 @@ services:
     env: static
     plan: free
     region: oregon
-    buildCommand: "cd frontend/user-portal && npm ci --only=production && npm run build"
+    buildCommand: "cd frontend/user-portal && NODE_OPTIONS='--max-old-space-size=512' npm ci --only=production && NODE_OPTIONS='--max-old-space-size=512' npm run build"
     staticPublishPath: frontend/user-portal/build
     buildFilter:
       paths:

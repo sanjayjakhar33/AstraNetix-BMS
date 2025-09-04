@@ -5,21 +5,21 @@ import uvicorn
 import os
 
 # Import microservice routers
-from founder.main import router as founder_router
-from isp.main import router as isp_router
-from branch.main import router as branch_router
-from user.main import router as user_router
-from payment.main import router as payment_router
-from ai_manager.main import router as ai_router
-from auth.main import router as auth_router
-from noc.main import router as noc_router
-from crm.main import router as crm_router
-from reporting.main import router as reporting_router
-from sustainability.main import router as sustainability_router
-from support.main import router as support_router
+from backend.founder.main import router as founder_router
+from backend.isp.main import router as isp_router
+from backend.branch.main import router as branch_router
+from backend.user.main import router as user_router
+from backend.payment.main import router as payment_router
+from backend.ai_manager.main import router as ai_router
+from backend.auth.main import router as auth_router
+from backend.noc.main import router as noc_router
+from backend.crm.main import router as crm_router
+from backend.reporting.main import router as reporting_router
+from backend.sustainability.main import router as sustainability_router
+from backend.support.main import router as support_router
 
-from shared.config import settings
-from shared.database.connection import init_db
+from backend.shared.config import settings
+from backend.shared.database.connection import init_db
 
 # Create FastAPI application
 app = FastAPI(
