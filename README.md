@@ -344,6 +344,30 @@ The system uses a multi-tenant PostgreSQL schema with the following key tables:
 
 ## 🌐 Deployment
 
+### 🚀 Deploy to Render (Recommended)
+
+**Quick 5-minute deployment to Render cloud:**
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sanjayjakhar33/AstraNetix-BMS)
+
+```bash
+# Quick setup
+./scripts/setup-render.sh
+
+# Follow the complete guide
+open RENDER_DEPLOYMENT_GUIDE.md
+```
+
+**Features:**
+- ✅ **One-click deployment** with render.yaml
+- ✅ **Auto-scaling** backend and frontends  
+- ✅ **Managed databases** (PostgreSQL + Redis)
+- ✅ **SSL certificates** automatically managed
+- ✅ **Global CDN** for frontend assets
+- ✅ **Cost-effective** starting at $25/month
+
+📚 **[Complete Render Guide →](RENDER_DEPLOYMENT_GUIDE.md)**
+
 ### Production Deployment on Serverbyt.in
 
 1. **Server Setup**

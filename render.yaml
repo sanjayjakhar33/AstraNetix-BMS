@@ -1,0 +1,132 @@
+# Render Configuration for AstraNetix AI BMS
+services:
+  # PostgreSQL Database
+  - type: pserv
+    name: astranetix-postgres
+    databaseName: astranetix_bms
+    user: astranetix_user
+    plan: starter
+    
+  # Redis Cache
+  - type: redis
+    name: astranetix-redis
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+
+  # Backend API Service
+  - type: web
+    name: astranetix-backend
+    env: python
+    plan: starter
+    region: oregon
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2"
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: astranetix-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: astranetix-redis
+          property: connectionString
+      - key: DEBUG
+        value: "false"
+      - key: LOG_LEVEL
+        value: "INFO"
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: JWT_ALGORITHM
+        value: "HS256"
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+      - key: CORS_ORIGINS
+        value: "https://astranetix-founder-portal.onrender.com,https://astranetix-isp-portal.onrender.com,https://astranetix-branch-portal.onrender.com,https://astranetix-user-portal.onrender.com"
+      - key: DOMAIN
+        value: "astranetix.com"
+      - key: SSL_ENABLED
+        value: "true"
+      - key: CDN_ENABLED
+        value: "true"
+
+  # Founder Portal - Static Site
+  - type: web
+    name: astranetix-founder-portal
+    env: static
+    plan: starter
+    region: oregon
+    buildCommand: "cd frontend/founder-portal && npm ci && npm run build"
+    staticPublishPath: frontend/founder-portal/build
+    buildFilter:
+      paths:
+        - frontend/founder-portal/**
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: astranetix-backend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: REACT_APP_APP_NAME
+        value: "AstraNetix Founder Portal"
+
+  # ISP Portal - Static Site  
+  - type: web
+    name: astranetix-isp-portal
+    env: static
+    plan: starter
+    region: oregon
+    buildCommand: "cd frontend/isp-portal && npm ci && npm run build"
+    staticPublishPath: frontend/isp-portal/build
+    buildFilter:
+      paths:
+        - frontend/isp-portal/**
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: astranetix-backend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: REACT_APP_APP_NAME
+        value: "AstraNetix ISP Portal"
+
+  # Branch Portal - Static Site
+  - type: web
+    name: astranetix-branch-portal
+    env: static
+    plan: starter
+    region: oregon
+    buildCommand: "cd frontend/branch-portal && npm ci && npm run build"
+    staticPublishPath: frontend/branch-portal/build
+    buildFilter:
+      paths:
+        - frontend/branch-portal/**
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: astranetix-backend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: REACT_APP_APP_NAME
+        value: "AstraNetix Branch Portal"
+
+  # User Portal - Static Site
+  - type: web
+    name: astranetix-user-portal
+    env: static
+    plan: starter
+    region: oregon
+    buildCommand: "cd frontend/user-portal && npm ci && npm run build"
+    staticPublishPath: frontend/user-portal/build
+    buildFilter:
+      paths:
+        - frontend/user-portal/**
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: astranetix-backend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: REACT_APP_APP_NAME
+        value: "AstraNetix User Portal"
