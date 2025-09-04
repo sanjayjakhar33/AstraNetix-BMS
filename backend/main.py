@@ -90,10 +90,24 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
+    """Health check endpoint for Render deployment"""
+    from datetime import datetime
+    from shared.database.connection import engine
+    
+    try:
+        # Test database connection
+        with engine.connect() as connection:
+            connection.execute("SELECT 1")
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+    
     return {
-        "status": "healthy",
-        "timestamp": "2024-01-01T00:00:00Z"
+        "status": "healthy" if db_status == "connected" else "degraded",
+        "database": db_status,
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "version": "2.0.0",
+        "environment": "render" if os.getenv("RENDER") else "local"
     }
 
 if __name__ == '__main__':

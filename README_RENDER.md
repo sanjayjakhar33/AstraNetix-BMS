@@ -4,11 +4,14 @@ Deploy your AstraNetix AI Bandwidth Management System to Render in minutes!
 
 ## 🆓 Free Tier Testing (Recommended for First-Time Users)
 
-**Want to test AstraNetix BMS for free?** Perfect! Start here:
+**Want to test AstraNetix BMS for free?** Perfect! Deploy in 3 easy steps:
 
-[![Test on Free Tier](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sanjayjakhar33/AstraNetix-BMS&blueprint=render-free-tier.yaml)
+### 🚀 Quick Deploy (15 minutes total)
+1. **Fork this repo** to your GitHub account
+2. **Click deploy button**: [![Test on Free Tier](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/sanjayjakhar33/AstraNetix-BMS&blueprint=render-free-tier.yaml)
+3. **Set JWT_SECRET_KEY** (click "Generate") and deploy!
 
-📖 **[Complete Free Tier Testing Guide](RENDER_FREE_TIER_TESTING.md)** - Step-by-step instructions
+📖 **Need help?** Follow our **[Step-by-Step Guide](RENDER_DEPLOYMENT_STEPS.md)** or run `./deploy-to-render.sh`
 
 ⚠️ **Free Tier Notes**:
 - Services sleep after 15 minutes (30-60s wake time)

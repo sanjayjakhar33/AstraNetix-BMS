@@ -1,0 +1,29 @@
+AstraNetix BMS - Render Deployment Information
+Generated: Thu Sep  4 05:23:25 UTC 2025
+
+Repository: https://github.com/sanjayjakhar33/AstraNetix-BMS
+Blueprint: render-free-tier.yaml
+
+Services to be deployed:
+- astranetix-postgres (Database)
+- astranetix-redis (Cache)
+- astranetix-backend (API)
+- astranetix-founder-portal (Frontend)
+- astranetix-isp-portal (Frontend)
+- astranetix-branch-portal (Frontend)
+- astranetix-user-portal (Frontend)
+
+Free Tier Limitations:
+- Services sleep after 15 minutes
+- 512MB RAM, 0.1 CPU per service
+- 750 hours/month total
+
+Testing URLs (replace XXXX with your service ID):
+- Health Check: https://astranetix-backend-XXXX.onrender.com/health
+- API Docs: https://astranetix-backend-XXXX.onrender.com/docs
+- Founder Portal: https://astranetix-founder-portal-XXXX.onrender.com
+- ISP Portal: https://astranetix-isp-portal-XXXX.onrender.com
+- Branch Portal: https://astranetix-branch-portal-XXXX.onrender.com
+- User Portal: https://astranetix-user-portal-XXXX.onrender.com
+
+For help: https://github.com/sanjayjakhar33/AstraNetix-BMS/issues
