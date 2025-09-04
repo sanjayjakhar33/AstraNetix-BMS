@@ -2,6 +2,18 @@
 
 Common issues and solutions when deploying AstraNetix BMS to Render.
 
+## 🔧 Quick Fix
+
+**If you're experiencing deployment failures, run this first:**
+
+```bash
+python scripts/validate-deployment.py
+```
+
+This script checks for the most common deployment issues and provides specific guidance.
+
+For a summary of recent critical fixes, see [DEPLOYMENT_FIXES.md](DEPLOYMENT_FIXES.md).
+
 ## 🚨 Build Failures
 
 ### Backend Build Fails

@@ -95,6 +95,8 @@ echo
 echo "📖 Quick Links:"
 echo "   🆓 Free Tier Testing: RENDER_FREE_TIER_TESTING.md"
 echo "   📘 Full Production Guide: RENDER_DEPLOYMENT_GUIDE.md"
+echo "   🔧 Deployment Validation: scripts/validate-deployment.py"
+echo "   🛠️  Fix Summary: DEPLOYMENT_FIXES.md"
 echo "   ⚙️  Environment Variables: .env.render" 
 echo "   🔧 Production Config: render.yaml"
 echo "   🧪 Free Tier Config: render-free-tier.yaml"
@@ -106,5 +108,6 @@ echo "   🏢 Production Deployment: 30 minutes, \$25-50/month"
 echo
 
 echo "✨ Setup complete! Choose your deployment path:"
+echo "   🔍 First, validate: python scripts/validate-deployment.py"
 echo "   📖 For testing: Open RENDER_FREE_TIER_TESTING.md"
 echo "   📖 For production: Open RENDER_DEPLOYMENT_GUIDE.md"
