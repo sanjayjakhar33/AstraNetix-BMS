@@ -109,23 +109,35 @@ RAZORPAY_KEY_ID=your-razorpay-key-id
 openssl rand -hex 32
 ```
 
-## 🔐 Step 4: SSL Certificate Setup
+## 🔐 Step 4: SSL Certificate Setup with Let's Encrypt
 
 ```bash
 # Install Certbot
 sudo apt install certbot python3-certbot-nginx -y
 
-# Stop nginx temporarily
+# Stop nginx temporarily if running
 sudo systemctl stop nginx
 
-# Get SSL certificates for all domains
+# Get SSL certificates for all serverbyt.in domains
 sudo certbot certonly --standalone \
   -d serverbyt.in \
   -d api.serverbyt.in \
   -d app.serverbyt.in \
   -d isp.serverbyt.in \
   -d branch.serverbyt.in \
-  -d user.serverbyt.in
+  -d user.serverbyt.in \
+  --agree-tos \
+  --email your-email@serverbyt.in
+```
+
+### 4.1 SSL Auto-Renewal Setup
+
+```bash
+# Add SSL certificate auto-renewal to crontab
+echo "0 12 * * * /usr/bin/certbot renew --quiet && systemctl reload nginx" | sudo crontab -
+
+# Test renewal
+sudo certbot renew --dry-run
 ```
 
 ## 🌐 Step 5: Nginx Configuration
